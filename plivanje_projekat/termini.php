@@ -1,9 +1,13 @@
 <?php
 
+date_default_timezone_set('Europe/Belgrade');
+
 require_once __DIR__ . '/classes/Session.php';
 require_once __DIR__ . '/classes/Termin.php';
 
 Session::requireLogin();
+
+$danas = date('Y-m-d');
 
 $poruka = '';
 
@@ -36,7 +40,7 @@ if ($mesec < 1 || $mesec > 12) {
     $mesec = $trenutniMesec;
 }
 
-$izabraniDatum = $_GET['datum'] ?? date('Y-m-d');
+$izabraniDatum = $_GET['datum'] ?? $danas;
 
 $validanDatum = DateTime::createFromFormat(
     'Y-m-d',
@@ -47,7 +51,11 @@ if (
     !$validanDatum
     || $validanDatum->format('Y-m-d') !== $izabraniDatum
 ) {
-    $izabraniDatum = date('Y-m-d');
+    $izabraniDatum = $danas;
+}
+
+if ($izabraniDatum < $danas) {
+    $izabraniDatum = $danas;
 }
 
 $terminiZaDatum = $terminModel->readByDate(
@@ -151,6 +159,22 @@ if ($sledeciMesec > 12) {
             background-color: #198754;
             margin-left: 5px;
         }
+
+        .past-day {
+            min-height: 90px;
+            display: block;
+            padding: 10px;
+            border-radius: 6px;
+            background-color: #f1f3f5;
+            color: #adb5bd;
+            cursor: not-allowed;
+            opacity: 0.75;
+            user-select: none;
+        }
+
+        .past-day:hover {
+            background-color: #f1f3f5;
+        }
     </style>
 </head>
 
@@ -187,12 +211,26 @@ if ($sledeciMesec > 12) {
                 Nazad
             </a>
 
-            <a
-                href="dodaj_termin.php?datum=<?= urlencode($izabraniDatum) ?>"
-                class="btn btn-success"
-            >
-                Dodaj termin
-            </a>
+            <?php if ($izabraniDatum >= $danas): ?>
+
+                <a
+                    href="dodaj_termin.php?datum=<?= urlencode($izabraniDatum) ?>"
+                    class="btn btn-success"
+                >
+                    Dodaj termin
+                </a>
+
+            <?php else: ?>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    disabled
+                >
+                    Dodaj termin
+                </button>
+
+            <?php endif; ?>
 
         </div>
 
@@ -515,33 +553,59 @@ if ($sledeciMesec > 12) {
                                 true
                             );
 
+                            $prosliDatum = $datumDana < $danas;
                             $izabran = $datumDana === $izabraniDatum;
                         ?>
 
                             <td class="p-1">
 
-                                <a
-                                    href="termini.php?godina=<?= $godina ?>&mesec=<?= $mesec ?>&datum=<?= $datumDana ?>"
-                                    class="calendar-day
-                                        <?= $imaTermin ? 'day-with-event' : '' ?>
-                                        <?= $izabran ? 'selected-day' : '' ?>"
-                                >
-                                    <?= $dan ?>
+                                <?php if ($prosliDatum): ?>
 
-                                    <?php if ($imaTermin): ?>
+                                    <div class="past-day">
 
-                                        <span
-                                            class="event-dot"
-                                            title="Postoji zakazan termin"
-                                        ></span>
+                                        <?= $dan ?>
 
-                                        <div class="small text-success mt-2">
-                                            Termin
-                                        </div>
+                                        <?php if ($imaTermin): ?>
 
-                                    <?php endif; ?>
+                                            <span
+                                                class="event-dot"
+                                                title="Prošli termin"
+                                            ></span>
 
-                                </a>
+                                            <div class="small text-muted mt-2">
+                                                Prošao termin
+                                            </div>
+
+                                        <?php endif; ?>
+
+                                    </div>
+
+                                <?php else: ?>
+
+                                    <a
+                                        href="termini.php?godina=<?= $godina ?>&mesec=<?= $mesec ?>&datum=<?= $datumDana ?>"
+                                        class="calendar-day
+                                            <?= $imaTermin ? 'day-with-event' : '' ?>
+                                            <?= $izabran ? 'selected-day' : '' ?>"
+                                    >
+                                        <?= $dan ?>
+
+                                        <?php if ($imaTermin): ?>
+
+                                            <span
+                                                class="event-dot"
+                                                title="Postoji zakazan termin"
+                                            ></span>
+
+                                            <div class="small text-success mt-2">
+                                                Termin
+                                            </div>
+
+                                        <?php endif; ?>
+
+                                    </a>
+
+                                <?php endif; ?>
 
                             </td>
 
