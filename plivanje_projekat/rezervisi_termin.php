@@ -1,12 +1,16 @@
 ```php
 <?php
 
+date_default_timezone_set('Europe/Belgrade');
+
 require_once __DIR__ . '/classes/Session.php';
 require_once __DIR__ . '/classes/Termin.php';
 require_once __DIR__ . '/classes/Polaznik.php';
 require_once __DIR__ . '/classes/Rezervacija.php';
 
 Session::requireLogin();
+
+$danas = date('Y-m-d');
 
 $terminModel = new Termin();
 $polaznikModel = new Polaznik();
@@ -30,6 +34,10 @@ if (!$termin) {
     die('Termin nije pronađen.');
 }
 
+if ($termin['datum'] < $danas) {
+    die('Nije moguće rezervisati termin koji je već prošao.');
+}
+
 $polaznici = $polaznikModel->read();
 
 $brojPrijavljenih =
@@ -51,7 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         FILTER_VALIDATE_INT
     );
 
-    if ((int) $termin['rezervacija_dostupna'] !== 1) {
+    if ($termin['datum'] < $danas) {
+        $greska = 'Nije moguće rezervisati termin koji je već prošao.';
+    } elseif ((int) $termin['rezervacija_dostupna'] !== 1) {
         $greska = 'Rezervacija ovog termina nije dostupna.';
     } elseif ($slobodnaMesta <= 0) {
         $greska = 'Termin je popunjen.';
