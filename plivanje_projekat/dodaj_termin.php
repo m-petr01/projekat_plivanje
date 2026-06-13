@@ -1,10 +1,29 @@
 <?php
 
+date_default_timezone_set('Europe/Belgrade');
+
 require_once __DIR__ . '/classes/Session.php';
 require_once __DIR__ . '/classes/Termin.php';
 require_once __DIR__ . '/classes/Instruktor.php';
 
 Session::requireLogin();
+
+$danas = date('Y-m-d');
+
+$datumIzKalendara = $_GET['datum'] ?? $danas;
+
+$validanDatumIzKalendara = DateTime::createFromFormat(
+    'Y-m-d',
+    $datumIzKalendara
+);
+
+if (
+    !$validanDatumIzKalendara
+    || $validanDatumIzKalendara->format('Y-m-d') !== $datumIzKalendara
+    || $datumIzKalendara < $danas
+) {
+    $datumIzKalendara = $danas;
+}
 
 $terminModel = new Termin();
 $instruktorModel = new Instruktor();
@@ -50,16 +69,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'Individualni'
     ];
 
+    $datumObjekat = DateTime::createFromFormat(
+        'Y-m-d',
+        $datum
+    );
+
     if (
         !$instruktorId
-        || $datum === ''
+        || !$datumObjekat
+        || $datumObjekat->format('Y-m-d') !== $datum
         || $vreme === ''
         || !$trajanjeMinuta
+        || $trajanjeMinuta < 15
         || $bazen === ''
         || !in_array($tipTreninga, $dozvoljeniTipovi, true)
         || !$kapacitet
+        || $kapacitet < 1
     ) {
-        $greska = 'Popunite sva obavezna polja.';
+        $greska = 'Popunite pravilno sva obavezna polja.';
+    } elseif ($datum < $danas) {
+        $greska = 'Nije moguće dodati termin za datum koji je prošao.';
     } else {
         $uspeh = $terminModel->create([
             'instruktor_id' => $instruktorId,
@@ -75,7 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($uspeh) {
             header(
-                'Location: termini.php?datum=' . urlencode($datum)
+                'Location: termini.php?godina='
+                . date('Y', strtotime($datum))
+                . '&mesec='
+                . date('n', strtotime($datum))
+                . '&datum='
+                . urlencode($datum)
             );
             exit;
         }
@@ -184,8 +218,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     id="datum"
                                     name="datum"
                                     class="form-control"
+                                    min="<?= htmlspecialchars($danas) ?>"
                                     value="<?= htmlspecialchars(
-                                        $_POST['datum'] ?? ''
+                                        $_POST['datum'] ?? $datumIzKalendara
                                     ) ?>"
                                     required
                                 >
@@ -375,7 +410,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </button>
 
                             <a
-                                href="termini.php"
+                                href="termini.php?godina=<?= date(
+                                    'Y',
+                                    strtotime($_POST['datum'] ?? $datumIzKalendara)
+                                ) ?>&mesec=<?= date(
+                                    'n',
+                                    strtotime($_POST['datum'] ?? $datumIzKalendara)
+                                ) ?>&datum=<?= urlencode(
+                                    $_POST['datum'] ?? $datumIzKalendara
+                                ) ?>"
                                 class="btn btn-secondary"
                             >
                                 Otkaži
