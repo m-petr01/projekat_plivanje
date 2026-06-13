@@ -1,11 +1,15 @@
 ```php
 <?php
 
+date_default_timezone_set('Europe/Belgrade');
+
 require_once __DIR__ . '/classes/Session.php';
 require_once __DIR__ . '/classes/Termin.php';
 require_once __DIR__ . '/classes/Instruktor.php';
 
 Session::requireLogin();
+
+$danas = date('Y-m-d');
 
 $terminModel = new Termin();
 $instruktorModel = new Instruktor();
@@ -82,6 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         || $datumObjekat->format('Y-m-d') !== $datum
     ) {
         $greska = 'Datum termina nije ispravan.';
+    } elseif ($datum < $danas) {
+        $greska = 'Termin nije moguće premestiti na datum koji je prošao.';
     } elseif ($vreme === '') {
         $greska = 'Vreme početka je obavezno.';
     } elseif (
@@ -283,6 +289,7 @@ $checkboxOznacen =
                                     id="datum"
                                     name="datum"
                                     class="form-control"
+                                    min="<?= htmlspecialchars($danas) ?>"
                                     value="<?= htmlspecialchars(
                                         $_POST['datum']
                                         ?? $termin['datum']
