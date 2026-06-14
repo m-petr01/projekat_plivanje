@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 14, 2026 at 01:02 AM
+-- Generation Time: Jun 14, 2026 at 01:34 AM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `polaznici` (
 --
 
 INSERT INTO `polaznici` (`id`, `ime`, `prezime`, `datum_rodjenja`, `telefon`, `email`, `nivo_id`) VALUES
-(4, 'Janko', 'Jankovic', '2001-01-02', '0611231233', 'jankojankovic@example.com', 2),
+(4, 'Janko', 'Jankovic', '2001-01-02', '0611231233', 'jankojankovic@example.com', 1),
 (5, 'Milorad', 'Miloradovic', '2001-02-02', '0611231235', 'mikiii@gmail.com', 3),
 (7, 'Stefan', 'Stefanovic', '1993-03-03', '0611231245', 'sstefan@outlook.com', 4);
 
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `rezervacije` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `termin_id` (`termin_id`,`polaznik_id`),
   KEY `polaznik_id` (`polaznik_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `rezervacije`
@@ -145,7 +145,11 @@ INSERT INTO `rezervacije` (`id`, `termin_id`, `polaznik_id`, `status`, `datum_re
 (1, 4, 4, 'rezervisano', '2026-06-13 21:50:37'),
 (2, 3, 4, 'rezervisano', '2026-06-13 21:53:35'),
 (3, 2, 4, 'rezervisano', '2026-06-13 22:03:57'),
-(4, 2, 5, 'rezervisano', '2026-06-14 01:01:51');
+(4, 2, 5, 'rezervisano', '2026-06-14 01:01:51'),
+(5, 9, 4, 'rezervisano', '2026-06-14 01:13:04'),
+(6, 10, 4, 'rezervisano', '2026-06-14 01:14:54'),
+(7, 11, 4, 'rezervisano', '2026-06-14 01:17:06'),
+(8, 12, 4, 'rezervisano', '2026-06-14 01:19:52');
 
 -- --------------------------------------------------------
 
@@ -184,14 +188,14 @@ CREATE TABLE IF NOT EXISTS `termini` (
   `rezervacija_dostupna` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `instruktor_id` (`instruktor_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `termini`
 --
 
 INSERT INTO `termini` (`id`, `instruktor_id`, `datum`, `vreme`, `trajanje_minuta`, `bazen`, `tip_treninga`, `opis`, `kapacitet`, `rezervacija_dostupna`) VALUES
-(2, 1, '2026-06-26', '19:30:00', 60, 'Otvoreni bazen', 'takmicarski', 'Trening sposobnosti i finalni test pred takmicenje u 400m slobodnom stilu', 5, 1),
+(13, 2, '2026-06-26', '19:00:00', 60, 'Otvoreni bazen', 'takmicarski', 'takmicenje', 10, 1),
 (3, 1, '2026-06-21', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', 'Vodeni Aerobik', 10, 1),
 (4, 2, '2026-06-23', '14:01:00', 60, 'Veliki bazen', 'rekreativni', 'Intenzivni treninzi prsnog plivanja uz dodatan trening fleksibilnosti kukova na vodenom aerobiku', 10, 1),
 (7, 1, '2026-06-23', '15:02:00', 60, 'Veliki bazen', 'rekreativni', 'Brziiii', 10, 1),
