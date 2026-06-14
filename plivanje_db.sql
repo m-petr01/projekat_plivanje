@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 14, 2026 at 12:10 AM
+-- Generation Time: Jun 14, 2026 at 12:54 AM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `polaznici` (
   `nivo_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nivo_id` (`nivo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `polaznici`
@@ -116,7 +116,8 @@ CREATE TABLE IF NOT EXISTS `polaznici` (
 
 INSERT INTO `polaznici` (`id`, `ime`, `prezime`, `datum_rodjenja`, `telefon`, `email`, `nivo_id`) VALUES
 (4, 'Janko', 'Jankovic', '2001-01-02', '0611231233', 'jankojankovic@example.com', 2),
-(5, 'Milorad', 'Miloradovic', '2001-02-02', '0611231235', 'mikiii@gmail.com', 3);
+(5, 'Milorad', 'Miloradovic', '2001-02-02', '0611231235', 'mikiii@gmail.com', 3),
+(7, 'Stefan', 'Stefanovic', '1993-03-03', '0611231245', 'sstefan@outlook.com', 4);
 
 -- --------------------------------------------------------
 
@@ -189,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `termini` (
 --
 
 INSERT INTO `termini` (`id`, `instruktor_id`, `datum`, `vreme`, `trajanje_minuta`, `bazen`, `tip_treninga`, `opis`, `kapacitet`, `rezervacija_dostupna`) VALUES
-(2, 1, '2026-06-26', '16:32:00', 60, 'Veliki bazen', 'rekreativni', 'Trening sposobnosti i finalni test pred takmicenje u 400m slobodnom stilu', 5, 1),
+(2, 1, '2026-06-26', '19:30:00', 60, 'Otvoreni bazen', 'rekreativni', 'Trening sposobnosti i finalni test pred takmicenje u 400m slobodnom stilu', 5, 1),
 (3, 1, '2026-06-21', '13:00:00', 60, 'Veliki bazen', 'rekreativni', 'Vodeni Aerobik', 10, 1),
 (4, 2, '2026-06-23', '14:01:00', 60, 'Veliki bazen', 'rekreativni', 'Intenzivni treninzi prsnog plivanja uz dodatan trening fleksibilnosti kukova na vodenom aerobiku', 10, 1),
 (7, 1, '2026-06-23', '15:02:00', 60, 'Veliki bazen', 'rekreativni', 'Brziiii', 10, 1);
