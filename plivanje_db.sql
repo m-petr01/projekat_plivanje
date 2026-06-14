@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 14, 2026 at 01:34 AM
+-- Generation Time: Jun 14, 2026 at 12:00 PM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -65,7 +65,14 @@ CREATE TABLE IF NOT EXISTS `nagrade` (
   `datum` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_nagrada_polaznik` (`polaznik_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `nagrade`
+--
+
+INSERT INTO `nagrade` (`id`, `polaznik_id`, `naziv`, `opis`, `datum`) VALUES
+(1, 8, 'Prvo mesto- 100m kraul', 'Osvojeno prvo mesto na gradskom takmicenju u plivanju u disciplini 100 metara kraul, sa vremenom 58.42 sekunde.', '2026-02-26');
 
 -- --------------------------------------------------------
 
@@ -108,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `polaznici` (
   `nivo_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nivo_id` (`nivo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `polaznici`
@@ -117,7 +124,8 @@ CREATE TABLE IF NOT EXISTS `polaznici` (
 INSERT INTO `polaznici` (`id`, `ime`, `prezime`, `datum_rodjenja`, `telefon`, `email`, `nivo_id`) VALUES
 (4, 'Janko', 'Jankovic', '2001-01-02', '0611231233', 'jankojankovic@example.com', 1),
 (5, 'Milorad', 'Miloradovic', '2001-02-02', '0611231235', 'mikiii@gmail.com', 3),
-(7, 'Stefan', 'Stefanovic', '1993-03-03', '0611231245', 'sstefan@outlook.com', 4);
+(7, 'Stefan', 'Stefanovic', '1993-03-03', '0611231245', 'sstefan@outlook.com', 4),
+(8, 'Luka', 'Petrovic', '2001-05-01', '0611231432', 'luleee@example.com', 3);
 
 -- --------------------------------------------------------
 
@@ -135,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `rezervacije` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `termin_id` (`termin_id`,`polaznik_id`),
   KEY `polaznik_id` (`polaznik_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `rezervacije`
@@ -149,7 +157,9 @@ INSERT INTO `rezervacije` (`id`, `termin_id`, `polaznik_id`, `status`, `datum_re
 (5, 9, 4, 'rezervisano', '2026-06-14 01:13:04'),
 (6, 10, 4, 'rezervisano', '2026-06-14 01:14:54'),
 (7, 11, 4, 'rezervisano', '2026-06-14 01:17:06'),
-(8, 12, 4, 'rezervisano', '2026-06-14 01:19:52');
+(8, 12, 4, 'rezervisano', '2026-06-14 01:19:52'),
+(9, 9, 8, 'rezervisano', '2026-06-14 10:59:39'),
+(10, 14, 5, 'rezervisano', '2026-06-14 11:46:54');
 
 -- --------------------------------------------------------
 
@@ -188,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `termini` (
   `rezervacija_dostupna` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `instruktor_id` (`instruktor_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `termini`
@@ -196,10 +206,11 @@ CREATE TABLE IF NOT EXISTS `termini` (
 
 INSERT INTO `termini` (`id`, `instruktor_id`, `datum`, `vreme`, `trajanje_minuta`, `bazen`, `tip_treninga`, `opis`, `kapacitet`, `rezervacija_dostupna`) VALUES
 (13, 2, '2026-06-26', '19:00:00', 60, 'Otvoreni bazen', 'takmicarski', 'takmicenje', 10, 1),
+(14, 1, '2026-06-14', '18:00:00', 60, 'Otvoreni bazen', 'individualni', NULL, 1, 1),
 (3, 1, '2026-06-21', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', 'Vodeni Aerobik', 10, 1),
 (4, 2, '2026-06-23', '14:01:00', 60, 'Veliki bazen', 'rekreativni', 'Intenzivni treninzi prsnog plivanja uz dodatan trening fleksibilnosti kukova na vodenom aerobiku', 10, 1),
 (7, 1, '2026-06-23', '15:02:00', 60, 'Veliki bazen', 'rekreativni', 'Brziiii', 10, 1),
-(9, 2, '2026-06-14', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', 'ahaahahahah', 10, 1);
+(9, 2, '2026-06-14', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', NULL, 10, 1);
 
 -- --------------------------------------------------------
 
@@ -218,14 +229,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `role`) VALUES
-(1, 'Viktor123', 'viktorv@gmail.com', '$2y$10$ysg856jj0.SvG3Ihm5aS5.Me5.ygFC6Nqlu8Cj7BaAnXAyF1HVrUS', '2026-06-13 18:04:41', 'zaposleni');
+(1, 'Viktor123', 'viktorv@gmail.com', '$2y$10$ysg856jj0.SvG3Ihm5aS5.Me5.ygFC6Nqlu8Cj7BaAnXAyF1HVrUS', '2026-06-13 18:04:41', 'zaposleni'),
+(2, 'Zoki123', 'zokicar@hotmail.com', '$2y$10$HJIA1sJmZt7soQZLh6PKAeretr27Gvfs7HwrqdUqEcYm8EscsrACe', '2026-06-14 11:58:22', 'zaposleni');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
