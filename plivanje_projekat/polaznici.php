@@ -44,9 +44,23 @@ $polaznici = $polaznikModel->read();
                     <strong><?= count($polaznici) ?></strong>
                 </p>
 
-                <a href="dodaj_polaznika.php" class="btn btn-success">
-                    Dodaj polaznika
-                </a>
+                <div class="d-flex gap-2">
+
+                    <a
+                        href="dashboard.php"
+                        class="btn btn-secondary"
+                    >
+                        Nazad
+                    </a>
+
+                    <a
+                        href="dodaj_polaznika.php"
+                        class="btn btn-success"
+                    >
+                        Dodaj polaznika
+                    </a>
+
+                </div>
 
             </div>
 
