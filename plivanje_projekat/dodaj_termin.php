@@ -131,6 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         FILTER_VALIDATE_INT
     );
 
+    if ($tipTreninga === 'Individualni') {
+        $kapacitet = 1;
+    }
+
     $rezervacijaDostupna = isset(
         $_POST['rezervacija_dostupna']
     ) ? 1 : 0;
@@ -545,6 +549,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 </div>
+
+
+<script>
+    const tipTreningaSelect =
+        document.getElementById('tip_treninga');
+
+    const kapacitetInput =
+        document.getElementById('kapacitet');
+
+    let poslednjiGrupniKapacitet =
+        kapacitetInput.value !== '1'
+            ? kapacitetInput.value
+            : '10';
+
+    function podesiKapacitetIndividualnogTermina() {
+        if (tipTreningaSelect.value === 'Individualni') {
+            if (
+                kapacitetInput.value !== ''
+                && kapacitetInput.value !== '1'
+            ) {
+                poslednjiGrupniKapacitet =
+                    kapacitetInput.value;
+            }
+
+            kapacitetInput.value = '1';
+            kapacitetInput.readOnly = true;
+        } else {
+            kapacitetInput.readOnly = false;
+
+            if (kapacitetInput.value === '1') {
+                kapacitetInput.value =
+                    poslednjiGrupniKapacitet || '10';
+            }
+        }
+    }
+
+    tipTreningaSelect.addEventListener(
+        'change',
+        podesiKapacitetIndividualnogTermina
+    );
+
+    podesiKapacitetIndividualnogTermina();
+</script>
 
 </body>
 </html>
