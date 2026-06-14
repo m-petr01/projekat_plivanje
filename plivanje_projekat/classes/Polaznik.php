@@ -24,6 +24,31 @@ class Polaznik extends BaseModel implements CrudInterface
         ]);
     }
 
+    public function createAndReturnId(array $data): int|false
+    {
+        $sql = "INSERT INTO polaznici
+                (ime, prezime, datum_rodjenja, telefon, email, nivo_id)
+                VALUES
+                (:ime, :prezime, :datum_rodjenja, :telefon, :email, :nivo_id)";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $uspeh = $stmt->execute([
+            ':ime' => $data['ime'],
+            ':prezime' => $data['prezime'],
+            ':datum_rodjenja' => $data['datum_rodjenja'],
+            ':telefon' => $data['telefon'],
+            ':email' => $data['email'],
+            ':nivo_id' => $data['nivo_id']
+        ]);
+
+        if (!$uspeh) {
+            return false;
+        }
+
+        return (int) $this->connection->lastInsertId();
+    }
+
     public function read(): array
     {
         $sql = "SELECT polaznici.*, nivoi.naziv AS naziv_nivoa
