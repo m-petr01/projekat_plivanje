@@ -7,6 +7,78 @@ require_once __DIR__ . '/classes/Session.php';
 require_once __DIR__ . '/classes/Termin.php';
 require_once __DIR__ . '/classes/Instruktor.php';
 
+
+function proveriDozvoljenoVremeTreninga(
+    string $bazen,
+    string $datum,
+    string $vreme,
+    int $trajanjeMinuta
+): string {
+    $pocetak = DateTime::createFromFormat(
+        'Y-m-d H:i',
+        $datum . ' ' . $vreme
+    );
+
+    if (!$pocetak) {
+        return 'Datum ili vreme termina nisu ispravni.';
+    }
+
+    $kraj = clone $pocetak;
+    $kraj->modify('+' . $trajanjeMinuta . ' minutes');
+
+    if ($kraj->format('Y-m-d') !== $datum) {
+        return 'Termin ne može da prelazi u sledeći dan.';
+    }
+
+    $danUNedelji = (int) $pocetak->format('N');
+
+    $minutiPocetka =
+        ((int) $pocetak->format('H') * 60)
+        + (int) $pocetak->format('i');
+
+    $minutiKraja =
+        ((int) $kraj->format('H') * 60)
+        + (int) $kraj->format('i');
+
+    $nazivBazena = mb_strtolower(
+        trim($bazen),
+        'UTF-8'
+    );
+
+    if (str_contains($nazivBazena, 'otvoreni')) {
+        if ($danUNedelji >= 1 && $danUNedelji <= 6) {
+            $dozvoljenPocetak = 19 * 60;
+            $dozvoljenKraj = 21 * 60;
+            $opisPerioda = '19:00–21:00';
+        } else {
+            $dozvoljenPocetak = 16 * 60;
+            $dozvoljenKraj = 20 * 60;
+            $opisPerioda = '16:00–20:00';
+        }
+    } elseif (str_contains($nazivBazena, 'zatvoreni')) {
+        if ($danUNedelji === 7) {
+            return 'Na zatvorenom bazenu nedeljom nema termina za trening.';
+        }
+
+        $dozvoljenPocetak = 18 * 60;
+        $dozvoljenKraj = 22 * 60;
+        $opisPerioda = '18:00–22:00';
+    } else {
+        return 'Naziv bazena mora biti „Otvoreni bazen“ ili „Zatvoreni bazen“.';
+    }
+
+    if (
+        $minutiPocetka < $dozvoljenPocetak
+        || $minutiKraja > $dozvoljenKraj
+    ) {
+        return 'Za izabrani bazen i dan trening mora u celosti biti u periodu '
+            . $opisPerioda . '.';
+    }
+
+    return '';
+}
+
+
 Session::requireLogin();
 
 $danas = date('Y-m-d');
@@ -114,7 +186,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $greska =
             'Kapacitet ne može biti manji od trenutnog broja prijavljenih polaznika.';
     } else {
-        $uspeh = $terminModel->update($id, [
+        $greskaVremena = proveriDozvoljenoVremeTreninga(
+            $bazen,
+            $datum,
+            $vreme,
+            $trajanjeMinuta
+        );
+
+        if ($greskaVremena !== '') {
+            $greska = $greskaVremena;
+        } else {
+            $uspeh = $terminModel->update($id, [
             'instruktor_id' => $instruktorId,
             'datum' => $datum,
             'vreme' => $vreme,
@@ -143,8 +225,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        $greska =
-            'Došlo je do greške prilikom izmene termina.';
+            $greska =
+                'Došlo je do greške prilikom izmene termina.';
+        }
     }
 }
 
@@ -227,6 +310,14 @@ $checkboxOznacen =
 
                         mesta.
 
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Dozvoljeni termini treninga:</strong><br>
+                        Otvoreni bazen — ponedeljak–subota 19:00–21:00,
+                        nedelja 16:00–20:00.<br>
+                        Zatvoreni bazen — ponedeljak–subota 18:00–22:00,
+                        nedeljom nema treninga.
                     </div>
 
                     <form method="POST">
@@ -400,6 +491,7 @@ $checkboxOznacen =
                                 id="bazen"
                                 name="bazen"
                                 class="form-control"
+                                list="bazeni"
                                 value="<?= htmlspecialchars(
                                     $_POST['bazen']
                                     ?? $termin['bazen']
@@ -407,6 +499,15 @@ $checkboxOznacen =
                                 ) ?>"
                                 required
                             >
+
+                            <datalist id="bazeni">
+                                <option value="Otvoreni bazen">
+                                <option value="Zatvoreni bazen">
+                            </datalist>
+
+                            <div class="form-text">
+                                Unesite tačno „Otvoreni bazen“ ili „Zatvoreni bazen“.
+                            </div>
 
                         </div>
 
