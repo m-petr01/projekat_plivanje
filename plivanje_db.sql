@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 14, 2026 at 12:54 AM
+-- Generation Time: Jun 14, 2026 at 01:02 AM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `rezervacije` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `termin_id` (`termin_id`,`polaznik_id`),
   KEY `polaznik_id` (`polaznik_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `rezervacije`
@@ -144,7 +144,8 @@ CREATE TABLE IF NOT EXISTS `rezervacije` (
 INSERT INTO `rezervacije` (`id`, `termin_id`, `polaznik_id`, `status`, `datum_rezervacije`) VALUES
 (1, 4, 4, 'rezervisano', '2026-06-13 21:50:37'),
 (2, 3, 4, 'rezervisano', '2026-06-13 21:53:35'),
-(3, 2, 4, 'rezervisano', '2026-06-13 22:03:57');
+(3, 2, 4, 'rezervisano', '2026-06-13 22:03:57'),
+(4, 2, 5, 'rezervisano', '2026-06-14 01:01:51');
 
 -- --------------------------------------------------------
 
@@ -183,17 +184,18 @@ CREATE TABLE IF NOT EXISTS `termini` (
   `rezervacija_dostupna` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `instruktor_id` (`instruktor_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `termini`
 --
 
 INSERT INTO `termini` (`id`, `instruktor_id`, `datum`, `vreme`, `trajanje_minuta`, `bazen`, `tip_treninga`, `opis`, `kapacitet`, `rezervacija_dostupna`) VALUES
-(2, 1, '2026-06-26', '19:30:00', 60, 'Otvoreni bazen', 'rekreativni', 'Trening sposobnosti i finalni test pred takmicenje u 400m slobodnom stilu', 5, 1),
-(3, 1, '2026-06-21', '13:00:00', 60, 'Veliki bazen', 'rekreativni', 'Vodeni Aerobik', 10, 1),
+(2, 1, '2026-06-26', '19:30:00', 60, 'Otvoreni bazen', 'takmicarski', 'Trening sposobnosti i finalni test pred takmicenje u 400m slobodnom stilu', 5, 1),
+(3, 1, '2026-06-21', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', 'Vodeni Aerobik', 10, 1),
 (4, 2, '2026-06-23', '14:01:00', 60, 'Veliki bazen', 'rekreativni', 'Intenzivni treninzi prsnog plivanja uz dodatan trening fleksibilnosti kukova na vodenom aerobiku', 10, 1),
-(7, 1, '2026-06-23', '15:02:00', 60, 'Veliki bazen', 'rekreativni', 'Brziiii', 10, 1);
+(7, 1, '2026-06-23', '15:02:00', 60, 'Veliki bazen', 'rekreativni', 'Brziiii', 10, 1),
+(9, 2, '2026-06-14', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', 'ahaahahahah', 10, 1);
 
 -- --------------------------------------------------------
 
