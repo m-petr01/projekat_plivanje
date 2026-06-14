@@ -393,17 +393,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 Bazen
                             </label>
 
-                            <input
-                                type="text"
+                            <select
                                 id="bazen"
                                 name="bazen"
-                                class="form-control"
-                                placeholder="Na primer: Veliki bazen"
-                                value="<?= htmlspecialchars(
-                                    $_POST['bazen'] ?? ''
-                                ) ?>"
+                                class="form-select"
                                 required
                             >
+                                <option value="">
+                                    Izaberite bazen
+                                </option>
+
+                                <option
+                                    value="Otvoreni bazen"
+                                    <?= ($_POST['bazen'] ?? '') === 'Otvoreni bazen'
+                                        ? 'selected'
+                                        : '' ?>
+                                >
+                                    Otvoreni bazen
+                                </option>
+
+                                <option
+                                    value="Zatvoreni bazen"
+                                    <?= ($_POST['bazen'] ?? '') === 'Zatvoreni bazen'
+                                        ? 'selected'
+                                        : '' ?>
+                                >
+                                    Zatvoreni bazen
+                                </option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
