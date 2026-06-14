@@ -1,4 +1,3 @@
-```php
 <?php
 
 date_default_timezone_set('Europe/Belgrade');
@@ -132,6 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         FILTER_VALIDATE_INT
     );
 
+    if ($tipTreninga === 'Individualni') {
+        $kapacitet = 1;
+    }
+
     $rezervacijaDostupna = isset(
         $_POST['rezervacija_dostupna']
     ) ? 1 : 0;
@@ -182,6 +185,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         || $kapacitet < 1
     ) {
         $greska = 'Kapacitet mora biti najmanje 1.';
+    } elseif (
+        $tipTreninga === 'Individualni'
+        && $brojPrijavljenih > 1
+    ) {
+        $greska =
+            'Termin ne može postati individualni jer trenutno ima '
+            . 'više od jednog prijavljenog polaznika.';
     } elseif ($kapacitet < $brojPrijavljenih) {
         $greska =
             'Kapacitet ne može biti manji od trenutnog broja prijavljenih polaznika.';
@@ -633,6 +643,61 @@ $checkboxOznacen =
 
 </div>
 
+
+<script>
+    const tipTreningaSelect =
+        document.getElementById('tip_treninga');
+
+    const kapacitetInput =
+        document.getElementById('kapacitet');
+
+    const brojPrijavljenih =
+        <?= (int) ($termin['broj_prijavljenih'] ?? 0) ?>;
+
+    let poslednjiGrupniKapacitet =
+        kapacitetInput.value !== '1'
+            ? kapacitetInput.value
+            : '10';
+
+    function podesiKapacitet() {
+        const individualni =
+            tipTreningaSelect.value === 'Individualni';
+
+        if (individualni) {
+            if (
+                kapacitetInput.value !== ''
+                && kapacitetInput.value !== '1'
+            ) {
+                poslednjiGrupniKapacitet =
+                    kapacitetInput.value;
+            }
+
+            kapacitetInput.value = '1';
+            kapacitetInput.min = '1';
+            kapacitetInput.max = '1';
+            kapacitetInput.readOnly = true;
+            kapacitetInput.setAttribute('aria-readonly', 'true');
+        } else {
+            kapacitetInput.readOnly = false;
+            kapacitetInput.removeAttribute('aria-readonly');
+            kapacitetInput.removeAttribute('max');
+            kapacitetInput.min =
+                String(Math.max(1, brojPrijavljenih));
+
+            if (kapacitetInput.value === '1') {
+                kapacitetInput.value =
+                    poslednjiGrupniKapacitet || '10';
+            }
+        }
+    }
+
+    tipTreningaSelect.addEventListener(
+        'change',
+        podesiKapacitet
+    );
+
+    podesiKapacitet();
+</script>
+
 </body>
 </html>
-```
