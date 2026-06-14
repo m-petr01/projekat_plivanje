@@ -236,6 +236,76 @@ if ($sledeciMesec > 12) {
 
     </div>
 
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h2 class="h5 mb-0">
+                Radno vreme bazena i dozvoljeni termini treninga
+            </h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <div class="border rounded p-3 h-100">
+
+                        <h3 class="h5 text-primary">
+                            Otvoreni bazen
+                        </h3>
+
+                        <p class="mb-3">
+                            <strong>Građansko kupanje:</strong><br>
+                            Ponedeljak–subota: 09:00–19:00<br>
+                            Nedelja: 12:00–16:00
+                        </p>
+
+                        <p class="mb-0 text-success">
+                            <strong>Dozvoljeni termini treninga:</strong><br>
+                            Ponedeljak–subota: 19:00–21:00<br>
+                            Nedelja: 16:00–20:00
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="border rounded p-3 h-100">
+
+                        <h3 class="h5 text-info">
+                            Zatvoreni bazen
+                        </h3>
+
+                        <p class="mb-3">
+                            <strong>Građansko kupanje:</strong><br>
+                            Ponedeljak–petak: 09:00–18:00<br>
+                            Subota–nedelja: 12:00–16:00<br>
+                            Noćno kupanje: 23:00–02:00
+                        </p>
+
+                        <p class="mb-0 text-success">
+                            <strong>Dozvoljeni termini treninga:</strong><br>
+                            Ponedeljak–subota: 18:00–22:00<br>
+                            Nedelja: nema treninga
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
     <div class="card shadow-sm mb-4">
 
         <div class="card-header bg-primary text-white">
