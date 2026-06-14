@@ -8,6 +8,20 @@ require_once __DIR__ . '/classes/Termin.php';
 require_once __DIR__ . '/classes/Polaznik.php';
 require_once __DIR__ . '/classes/Rezervacija.php';
 
+
+function normalizujTekst(string $tekst): string
+{
+    $tekst = mb_strtolower(trim($tekst), 'UTF-8');
+
+    return strtr($tekst, [
+        'č' => 'c',
+        'ć' => 'c',
+        'š' => 's',
+        'đ' => 'dj',
+        'ž' => 'z'
+    ]);
+}
+
 Session::requireLogin();
 
 $danas = date('Y-m-d');
@@ -40,6 +54,37 @@ if ($termin['datum'] < $danas) {
 
 $polaznici = $polaznikModel->read();
 
+$tipTreningaNormalizovan = normalizujTekst(
+    $termin['tip_treninga']
+);
+
+$dozvoljeniNivoiZaTakmicarski = [
+    'napredni',
+    'takmicarski'
+];
+
+$polazniciZaPrikaz = array_filter(
+    $polaznici,
+    static function (array $polaznik) use (
+        $tipTreningaNormalizovan,
+        $dozvoljeniNivoiZaTakmicarski
+    ): bool {
+        if ($tipTreningaNormalizovan !== 'takmicarski') {
+            return true;
+        }
+
+        $nivoPolaznika = normalizujTekst(
+            $polaznik['naziv_nivoa'] ?? ''
+        );
+
+        return in_array(
+            $nivoPolaznika,
+            $dozvoljeniNivoiZaTakmicarski,
+            true
+        );
+    }
+);
+
 $brojPrijavljenih =
     $rezervacijaModel->brojAktivnihRezervacija(
         $terminId
@@ -68,52 +113,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!$polaznikId) {
         $greska = 'Izaberite polaznika.';
     } else {
-        $izabraniPolaznik =
-            $polaznikModel->findById($polaznikId);
+        $izabraniPolaznik = null;
+
+        foreach ($polazniciZaPrikaz as $polaznik) {
+            if ((int) $polaznik['id'] === $polaznikId) {
+                $izabraniPolaznik = $polaznik;
+                break;
+            }
+        }
 
         if (!$izabraniPolaznik) {
             $greska = 'Izabrani polaznik ne postoji.';
         } else {
-            $postojecaRezervacija =
-                $rezervacijaModel->findByTerminAndPolaznik(
-                    $terminId,
-                    $polaznikId
-                );
+            $nivoIzabranogPolaznika = normalizujTekst(
+                $izabraniPolaznik['naziv_nivoa'] ?? ''
+            );
 
             if (
-                $postojecaRezervacija
-                && $postojecaRezervacija['status'] === 'rezervisano'
+                $tipTreningaNormalizovan === 'takmicarski'
+                && !in_array(
+                    $nivoIzabranogPolaznika,
+                    $dozvoljeniNivoiZaTakmicarski,
+                    true
+                )
             ) {
                 $greska =
-                    'Ovaj polaznik je već rezervisao termin.';
+                    'Takmičarski termin mogu rezervisati samo polaznici '
+                    . 'naprednog ili takmičarskog nivoa.';
             } else {
-                $uspeh = $rezervacijaModel->create(
-                    $terminId,
-                    $polaznikId
-                );
-
-                if ($uspeh) {
-                    header(
-                        'Location: termini.php?godina='
-                        . date(
-                            'Y',
-                            strtotime($termin['datum'])
-                        )
-                        . '&mesec='
-                        . date(
-                            'n',
-                            strtotime($termin['datum'])
-                        )
-                        . '&datum='
-                        . urlencode($termin['datum'])
-                        . '&rezervisano=1'
+                $postojecaRezervacija =
+                    $rezervacijaModel->findByTerminAndPolaznik(
+                        $terminId,
+                        $polaznikId
                     );
 
-                    exit;
-                }
+                if (
+                    $postojecaRezervacija
+                    && $postojecaRezervacija['status'] === 'rezervisano'
+                ) {
+                    $greska =
+                        'Ovaj polaznik je već rezervisao termin.';
+                } else {
+                    $uspeh = $rezervacijaModel->create(
+                        $terminId,
+                        $polaznikId
+                    );
 
-                $greska =
-                    'Došlo je do greške prilikom rezervacije.';
+                    if ($uspeh) {
+                        header(
+                            'Location: termini.php?godina='
+                            . date(
+                                'Y',
+                                strtotime($termin['datum'])
+                            )
+                            . '&mesec='
+                            . date(
+                                'n',
+                                strtotime($termin['datum'])
+                            )
+                            . '&datum='
+                            . urlencode($termin['datum'])
+                            . '&rezervisano=1'
+                        );
+
+                        exit;
+                    }
+
+                    $greska =
+                        'Došlo je do greške prilikom rezervacije.';
+                }
             }
         }
     }
@@ -172,6 +240,17 @@ $vremeZavrsetka->modify(
 
                         <div class="alert alert-danger">
                             <?= htmlspecialchars($greska) ?>
+                        </div>
+
+                    <?php endif; ?>
+
+                    <?php if (
+                        $tipTreningaNormalizovan === 'takmicarski'
+                    ): ?>
+
+                        <div class="alert alert-warning">
+                            Ovaj termin mogu rezervisati samo polaznici
+                            naprednog ili takmičarskog nivoa.
                         </div>
 
                     <?php endif; ?>
@@ -257,7 +336,7 @@ $vremeZavrsetka->modify(
                         && $slobodnaMesta > 0
                     ): ?>
 
-                        <?php if (empty($polaznici)): ?>
+                        <?php if (empty($polazniciZaPrikaz)): ?>
 
                             <div class="alert alert-warning">
                                 Nema evidentiranih polaznika koje je
@@ -297,7 +376,7 @@ $vremeZavrsetka->modify(
                                         </option>
 
                                         <?php foreach (
-                                            $polaznici as $polaznik
+                                            $polazniciZaPrikaz as $polaznik
                                         ): ?>
 
                                             <option
@@ -313,6 +392,11 @@ $vremeZavrsetka->modify(
                                                     $polaznik['ime']
                                                     . ' '
                                                     . $polaznik['prezime']
+                                                    . ' — '
+                                                    . (
+                                                        $polaznik['naziv_nivoa']
+                                                        ?? 'Bez nivoa'
+                                                    )
                                                 ) ?>
                                             </option>
 
