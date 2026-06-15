@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 14, 2026 at 12:00 PM
+-- Generation Time: Jun 15, 2026 at 12:18 PM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `plivanje_db`
 --
+CREATE DATABASE IF NOT EXISTS `plivanje_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `plivanje_db`;
 
 -- --------------------------------------------------------
 
@@ -40,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `instruktori` (
   `sertifikati_opis` text COLLATE utf8mb4_unicode_ci,
   `obrazovanje` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `instruktori`
@@ -48,7 +50,8 @@ CREATE TABLE IF NOT EXISTS `instruktori` (
 
 INSERT INTO `instruktori` (`id`, `ime`, `prezime`, `telefon`, `email`, `specijalnost`, `biografija`, `godine_iskustva`, `sertifikati_opis`, `obrazovanje`) VALUES
 (1, 'Sale', 'Salinjo', '0611231234', 'salesaki@gmail.com', 'kraul 400m', 'Sale Salinjo je instruktor plivanja specijalizovan za kraul, razvoj kondicije i pripremu plivača za srednje i duge deonice. U radu sa polaznicima poseban akcenat stavlja na pravilnu tehniku disanja, položaj tela u vodi, ekonomičnost pokreta i postepeno povećavanje izdržljivosti. Iskustvo je sticao kroz individualne i grupne treninge sa početnicima, rekreativcima i takmičarima. Njegov pristup je disciplinovan, ali prilagođen sposobnostima i ciljevima svakog polaznika.', 5, 'Licencirani instruktor plivanja. Završena stručna obuka za rad sa početnicima i neplivačima. Sertifikat iz oblasti bezbednosti na vodi i pružanja prve pomoći. Dodatna edukacija iz planiranja kondicionih treninga za plivače i usavršavanja tehnike kraula. Iskustvo u pripremi plivača za discipline 200 m i 400 m slobodnim stilom.', 'Fakultet sporta i fizickog vaspitanja'),
-(2, 'Ivan', 'Ivanovic', '0611234569', 'ivanchad@example.com', 'prsno 50m', 'Ivan je instruktor plivanja sa sedam godina iskustva u radu sa početnicima, rekreativcima i naprednim plivačima. Specijalizovan je za prsno plivanje na 50 metara, pravilno disanje i preživljavanje nakon prejakog starta. Poznat je po tome što strogo vodi trening, ali se povremeno neprimetno iskrade iz bazena i priključi grupi za vodeni aerobik. Tvrdi da to radi isključivo zbog stručnog usavršavanja i bolje pokretljivosti kukova.', 69, 'Licencirani instruktor plivanja\r\nSertifikat za spasavanje na vodi', 'Fakultet sporta i fizičkog vaspitanja, smer plivanje i vodeni sportovi');
+(2, 'Ivan', 'Ivanovic', '0611234569', 'ivanchad@example.com', 'prsno 50m', 'Ivan je instruktor plivanja sa sedam godina iskustva u radu sa početnicima, rekreativcima i naprednim plivačima. Specijalizovan je za prsno plivanje na 50 metara, pravilno disanje i preživljavanje nakon prejakog starta. Poznat je po tome što strogo vodi trening, ali se povremeno neprimetno iskrade iz bazena i priključi grupi za vodeni aerobik. Tvrdi da to radi isključivo zbog stručnog usavršavanja i bolje pokretljivosti kukova.', 69, 'Licencirani instruktor plivanja\r\nSertifikat za spasavanje na vodi', 'Fakultet sporta i fizičkog vaspitanja, smer plivanje i vodeni sportovi'),
+(3, 'Filip', 'Markovic', '0602131234', 'filipm494@gmail.com', 'freestyle 200m', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -143,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `rezervacije` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `termin_id` (`termin_id`,`polaznik_id`),
   KEY `polaznik_id` (`polaznik_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `rezervacije`
@@ -159,7 +162,8 @@ INSERT INTO `rezervacije` (`id`, `termin_id`, `polaznik_id`, `status`, `datum_re
 (7, 11, 4, 'rezervisano', '2026-06-14 01:17:06'),
 (8, 12, 4, 'rezervisano', '2026-06-14 01:19:52'),
 (9, 9, 8, 'rezervisano', '2026-06-14 10:59:39'),
-(10, 14, 5, 'rezervisano', '2026-06-14 11:46:54');
+(10, 14, 5, 'rezervisano', '2026-06-14 11:46:54'),
+(11, 7, 5, 'rezervisano', '2026-06-15 12:08:26');
 
 -- --------------------------------------------------------
 
@@ -176,7 +180,15 @@ CREATE TABLE IF NOT EXISTS `sertifikati` (
   `opis` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `polaznik_id` (`polaznik_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sertifikati`
+--
+
+INSERT INTO `sertifikati` (`id`, `polaznik_id`, `naziv`, `datum_izdavanja`, `opis`) VALUES
+(1, 8, 'Napredna plivačka tehnika', '2026-06-14', NULL),
+(2, 7, 'Takmičarska osposobljenost', '2026-06-14', NULL);
 
 -- --------------------------------------------------------
 
@@ -209,7 +221,7 @@ INSERT INTO `termini` (`id`, `instruktor_id`, `datum`, `vreme`, `trajanje_minuta
 (14, 1, '2026-06-14', '18:00:00', 60, 'Otvoreni bazen', 'individualni', NULL, 1, 1),
 (3, 1, '2026-06-21', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', 'Vodeni Aerobik', 10, 1),
 (4, 2, '2026-06-23', '14:01:00', 60, 'Veliki bazen', 'rekreativni', 'Intenzivni treninzi prsnog plivanja uz dodatan trening fleksibilnosti kukova na vodenom aerobiku', 10, 1),
-(7, 1, '2026-06-23', '15:02:00', 60, 'Veliki bazen', 'rekreativni', 'Brziiii', 10, 1),
+(7, 1, '2026-06-23', '19:00:00', 60, 'Otvoreni bazen', 'individualni', 'Trening usavrsavanja tehnike na kraul stilu uz konstantno pracenje trenera', 1, 1),
 (9, 2, '2026-06-14', '16:00:00', 60, 'Otvoreni bazen', 'rekreativni', NULL, 10, 1);
 
 -- --------------------------------------------------------
