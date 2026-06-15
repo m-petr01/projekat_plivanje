@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 15, 2026 at 12:54 PM
+-- Generation Time: Jun 15, 2026 at 12:56 PM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `instruktori` (
 INSERT INTO `instruktori` (`id`, `ime`, `prezime`, `telefon`, `email`, `specijalnost`, `biografija`, `godine_iskustva`, `sertifikati_opis`, `obrazovanje`) VALUES
 (1, 'Sale', 'Salinjo', '0611231234', 'salesaki@gmail.com', 'kraul 400m', 'Sale Salinjo je instruktor plivanja specijalizovan za kraul, razvoj kondicije i pripremu plivača za srednje i duge deonice. U radu sa polaznicima poseban akcenat stavlja na pravilnu tehniku disanja, položaj tela u vodi, ekonomičnost pokreta i postepeno povećavanje izdržljivosti. Iskustvo je sticao kroz individualne i grupne treninge sa početnicima, rekreativcima i takmičarima. Njegov pristup je disciplinovan, ali prilagođen sposobnostima i ciljevima svakog polaznika.', 5, 'Licencirani instruktor plivanja. Završena stručna obuka za rad sa početnicima i neplivačima. Sertifikat iz oblasti bezbednosti na vodi i pružanja prve pomoći. Dodatna edukacija iz planiranja kondicionih treninga za plivače i usavršavanja tehnike kraula. Iskustvo u pripremi plivača za discipline 200 m i 400 m slobodnim stilom.', 'Fakultet sporta i fizickog vaspitanja'),
 (2, 'Ivan', 'Ivanovic', '0611234569', 'ivanchad@example.com', 'prsno 50m', 'Ivan je instruktor plivanja sa sedam godina iskustva u radu sa početnicima, rekreativcima i naprednim plivačima. Specijalizovan je za prsno plivanje na 50 metara, pravilno disanje i preživljavanje nakon prejakog starta. Poznat je po tome što strogo vodi trening, ali se povremeno neprimetno iskrade iz bazena i priključi grupi za vodeni aerobik. Tvrdi da to radi isključivo zbog stručnog usavršavanja i bolje pokretljivosti kukova.', 67, 'Licencirani instruktor plivanja\r\nSertifikat za spasavanje na vodi', 'Fakultet sporta i fizičkog vaspitanja, smer plivanje i vodeni sportovi'),
-(3, 'Filip', 'Markovic', '0602131234', 'filipm494@gmail.com', 'freestyle 200m', 'Bivši takmičarski plivač sa fokusom na slobodni stil i discipline srednjih distanci. Više godina iskustva u obuci početnika, rekreativaca i naprednih plivača. Poseban akcenat stavlja na pravilnu tehniku zaveslaja, disanje i ekonomičnost pokreta u vodi.', 12, NULL, 'Fakultet sporta i fizičkog vaspitanja, smer plivanje i vodeni sportovi');
+(3, 'Filip', 'Markovic', '0602131234', 'filipm494@gmail.com', 'freestyle 200m', 'Bivši takmičarski plivač sa fokusom na slobodni stil i discipline srednjih distanci. Više godina iskustva u obuci početnika, rekreativaca i naprednih plivača. Poseban akcenat stavlja na pravilnu tehniku zaveslaja, disanje i ekonomičnost pokreta u vodi.', 12, 'Licenca instruktora plivanja. Sertifikat za obuku neplivača i rad sa decom. Sertifikat iz prve pomoći i bezbednosti na bazenima. Učešće na stručnim seminarima iz oblasti plivanja i sportske pedagogije.', 'Fakultet sporta i fizičkog vaspitanja, smer plivanje i vodeni sportovi');
 
 -- --------------------------------------------------------
 
